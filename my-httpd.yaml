@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: my-http-deploy
+  #namespace: ciq-demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        apps: my-http
+    spec:
+      containers:
+      - name: my-http-containers
+        image: nginx
+        resources:
+          requests:
+           cpu: 100m
+           memory: 128Mi
+          limits:
+           cpu: 250m
+           memory: 256Mi
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-http-service
+  #namespace: ciq-demo
+spec:
+  selector:
+    apps: my-http
+  type: LoadBalancer
+  ports:
+    - name: my-http-port
+      port: 80
+      targetPort: 80
