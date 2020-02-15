@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: my-tomcat-deploy
+  #namespace: ciq-demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        apps: my-tomcat
+    spec:
+      containers:
+      - name: my-tomcat-containers
+        image: tomcat:8.0
+        resources:
+          requests:
+           cpu: 100m
+           memory: 128Mi
+          limits:
+           cpu: 250m
+           memory: 256Mi
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-tomcat-service
+  #namespace: ciq-demo
+spec:
+  selector:
+    apps: my-tomcat
+  type: LoadBalancer
+  ports:
+    - name: my-tomcat-port
+      port: 8080
+      targetPort: 8080
